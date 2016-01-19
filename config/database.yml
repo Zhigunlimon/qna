@@ -1,0 +1,23 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  username: <%= ENV['DBUSERNAME'] %>
+  password: <%= ENV['DBPASSWORD'] %>
+
+development:
+  <<: *default
+  database: <%= ENV['DBNAMEPREFIX'] %>_development
+  host: localhost
+  port: 5432
+
+test:
+  <<: *default
+  database: <%= ENV['DBNAMEPREFIX'] %>_test
+  host: localhost
+  port: 5432
+
+production:
+  <<: *default
+  database: <%= ENV['DBNAMEPREFIX'] %>_production
