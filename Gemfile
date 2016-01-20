@@ -28,4 +28,5 @@ group :test do
   gem 'capybara-webkit', '~> 1.6.0'
   gem 'capybara-screenshot', '~> 1.0.10'
   gem 'database_cleaner', '~> 1.4.1'
+  gem 'shoulda-matchers'
 end
