@@ -15,19 +15,19 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'render create view' do
         post :create, question_id: question, answer: attributes_for(:answer)
-        expect(response).to render_template :create
+        expect(response).to redirect_to question_path(assigns(:question))
       end
     end
 
     context 'with invalid attributes' do
       it 'does not save answer in the database' do
         expect { post :create, question_id: question, answer: attributes_for(:invalid_answer) }
-        .to_not change(question.answers, :count)
+        .to_not change(Answer, :count)
       end
 
       it 'render create view' do
         post :create, question_id: question, answer: attributes_for(:invalid_answer) 
-        expect(response).to render_template :create
+        expect(response).to render_template :new
       end
     end
   end
@@ -36,7 +36,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'Authenticated user' do
       sign_in_user
       let(:answer) { create(:answer, question: question, user: @user) }
-      let(:foreign_answer) { create(:answer, question: question) }
+      let(:foreign_answer) { create(:answer, question: question, user: user) }
 
       it 'assigns the question' do
         patch :update, id: answer, question_id: question, answer: attributes_for(:answer) 
@@ -62,7 +62,8 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'Non authenticated user' do
-      let(:answer) { create :answer, question: question }
+      let(:answer) { create :answer, question: question, user: user }
+
       it 'does not change answer' do
         patch :update, id: answer, question_id: question, answer:  { body: 'answer new body' } 
         answer.reload
@@ -72,7 +73,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   let(:answer) { create(:answer, question: question, user: @user) }
-  let(:foreign_answer) { create(:answer, question: question) }
+  let(:foreign_answer) { create(:answer, question: question, user: user) }
 
   describe 'POST #destroy' do
     sign_in_user

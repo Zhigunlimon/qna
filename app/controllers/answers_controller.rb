@@ -11,8 +11,11 @@ class AnswersController < ApplicationController
     @answer.user = current_user
     @answers = @question.answers.all
 
-    return unless @answer.save
-    flash.now[:notice] = "Your answer was created."
+    if @answer.save
+      redirect_to @question, notice: 'Your answer was successfully created.'
+    else
+      render :new
+    end
   end
 
   def edit
