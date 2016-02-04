@@ -12,6 +12,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'figaro'
 gem 'slim-rails'
 gem 'devise'
+gem 'awesome_print'
 
 group :development, :test do
   gem 'byebug'

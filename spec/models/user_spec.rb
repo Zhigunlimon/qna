@@ -9,11 +9,11 @@ RSpec.describe User, type: :model do
     let(:answer){ create(:answer, user: user.first) }
 
     it 'should be an author'do
-      expect(user.first.author?(answer)).to be true
+      expect(user.first).to be_author(answer)
     end
 
     it 'should not be an author'do
-      expect(user.second.author?(answer)).to be false
+      expect(user.second).not_to be_author(answer)
     end
   end
 end

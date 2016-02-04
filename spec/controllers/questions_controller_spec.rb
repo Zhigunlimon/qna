@@ -54,13 +54,14 @@ describe QuestionsController do
   end
 
   describe 'POST #create' do
+    sign_in_user
     context 'with valid attributes' do
       it 'saves the new question in the database' do
-        expect { post :create, question: attributes_for(:question) }.to change(Question, :count).by(1)
+        expect { post :create, question: attributes_for(:question, user_id: @user) }.to change(@user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
-        post :create, question: attributes_for(:question)
+        post :create, question: attributes_for(:question, user_id: @user)
         expect(response).to redirect_to question_path(assigns(:question))
       end
     end
@@ -68,6 +69,10 @@ describe QuestionsController do
     context 'with invalid attributes' do
       it 'does not save the question' do
         expect { post :create, question: attributes_for(:invalid_question) }.to_not change(Question, :count)
+      end
+
+      it 'does not save the question without user' do
+        expect { post :create, question: attributes_for(:question) }.to_not change(Question, :count)
       end
 
       it 're-renders new view' do
