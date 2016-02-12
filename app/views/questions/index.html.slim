@@ -1,0 +1,7 @@
+-if user_signed_in?
+  = link_to 'Sign Out', destroy_user_session_path, method: :delete
+- @questions.each do |question|
+  = link_to question.title, question_path(question)
+br
+= link_to 'Ask question', new_question_path
+

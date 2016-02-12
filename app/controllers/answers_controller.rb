@@ -1,12 +1,15 @@
 class AnswersController < ApplicationController
 
   before_action :authenticate_user!
-  before_action :load_answer, except: [:create]
-  before_action :load_question, except: [:create]
-  before_action :check_authority, except: [:create]
+  before_action :load_question
+  before_action :load_answer, except: [:create, :new]
+  before_action :check_authority, except: [:create, :new]
+
+  def new
+    @answer = @question.answers.new
+  end
 
   def create
-    @question = Question.find(params[:question_id])
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
     @answers = @question.answers.all
@@ -41,11 +44,11 @@ class AnswersController < ApplicationController
   end
 
   def load_answer
-    @answer = Answer.find(params[:id])
+    @answer = @question.answers.find(params[:id])
   end
 
   def load_question
-    @question = @answer.question
+    @question = Question.find(params[:question_id])
   end
 
   def check_authority
