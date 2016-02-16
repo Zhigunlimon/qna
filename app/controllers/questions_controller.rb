@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, except: [ :index, :show ]
+  before_action :authenticate_user!, only: [:new, :create, :destroy]
   before_action :load_question, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -7,6 +7,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @answer = @question.answers.new
     @answers = @question.answers
   end
 
@@ -37,8 +38,11 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question.destroy
-    flash[:notice] = 'Your question successfully deleted.'
+    if current_user.author?(@question) && @question.destroy
+      flash[:notice] = 'Your question was successfully deleted.'
+    else
+      flash[:notice] = 'Your question was not deleted.'
+    end
     redirect_to questions_path
   end
 
@@ -49,6 +53,6 @@ class QuestionsController < ApplicationController
   end
 
   def question_params
-    params.require(:question).permit(:title, :body, :user_id)
+    params.require(:question).permit(:title, :body)
   end
 end

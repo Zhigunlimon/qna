@@ -60,11 +60,11 @@ describe QuestionsController do
     sign_in_user
     context 'with valid attributes' do
       it 'saves the new question in the database' do
-        expect { post :create, question: attributes_for(:question, user_id: @user) }.to change(@user.questions, :count).by(1)
+        expect { post :create, question: attributes_for(:question) }.to change(@user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
-        post :create, question: attributes_for(:question, user_id: @user)
+        post :create, question: attributes_for(:question)
         expect(response).to redirect_to question_path(assigns(:question))
       end
     end
@@ -108,7 +108,7 @@ describe QuestionsController do
       it 'does not change question attributes' do
         question.reload
         expect(question.title).to_not eq 'new title'
-        expect(question.body).to eq 'MyText'
+        expect(question.body).to eq 'Body for Answer'
       end
 
       it 're-renders edit view' do
@@ -118,25 +118,23 @@ describe QuestionsController do
   end
 
   describe 'DELETE #destroy' do
-    before { question }
+    sign_in_user
+    let!(:question) { create(:question, user: @user) }
+    let!(:foreign_question) { create(:question) }
 
     context 'authentcated user' do
-      sign_in_user
 
       it 'deletes question' do
         expect { delete :destroy, id: question }.to change(Question, :count).by(-1)
       end
 
+      it 'deletes question' do
+        expect { delete :destroy, id: foreign_question }.to_not change(Question, :count)
+      end
+
       it 'redirect to index view' do
         delete :destroy, id: question
         expect(response).to redirect_to questions_path
-      end
-    end
-
-    context 'Non-authentcated user' do
-
-      it 'tries to deletes question' do
-        expect { delete :destroy, id: question }.to_not change(Question, :count)
       end
     end
   end

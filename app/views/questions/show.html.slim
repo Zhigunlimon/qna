@@ -1,13 +1,12 @@
 p= @question.title
 p= @question.body
-- if current_user
-  = link_to 'Create Answer', new_question_answer_path(@question)
-  - if current_user.author?(@question)
-    = link_to 'Delete question', @question, method: :delete
-
+- if current_user && current_user.author?(@question)
+  = link_to 'Delete question', @question, method: :delete
 - @answers.each do |answer|
   ul
-    li = answer.user.email
     li = answer.body
     - if current_user && current_user.author?(answer)
       = link_to 'Delete Answer', question_answer_path(@question, answer), method: :delete
+- if current_user
+  = render template: 'answers/new'
+
