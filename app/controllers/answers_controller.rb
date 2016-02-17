@@ -17,7 +17,7 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to @question, notice: 'Your answer was successfully created.'
     else
-      render :new
+      redirect_to @question, notice: 'Your answer was was not created.'
     end
   end
 
@@ -52,6 +52,6 @@ class AnswersController < ApplicationController
   end
 
   def check_authority
-    redirect_to @question, notice: 'You do not author of answer.' unless current_user.author?(@answer)
+    redirect_to @question, notice: 'You are not thr author of answer.' unless current_user.author?(@answer)
   end
 end
