@@ -2,8 +2,11 @@ p= @question.title
 p= @question.body
 - if current_user && current_user.author?(@question)
   = link_to 'Delete question', @question, method: :delete
-.answers
-  = render 'answers'
+- @answers.each do |answer|
+  ul
+    li = answer.body
+    - if current_user && current_user.author?(answer)
+      = link_to 'Delete Answer', question_answer_path(@question, answer), method: :delete
 - if current_user
   = render partial: 'answers/new'
 

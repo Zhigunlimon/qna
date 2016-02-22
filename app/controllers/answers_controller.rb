@@ -13,8 +13,12 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
     @answers = @question.answers.all
-    @answer.save
 
+    if @answer.save
+      redirect_to @question, notice: 'Your answer was successfully created.'
+    else
+      redirect_to @question, notice: 'Your answer was was not created.'
+    end
   end
 
   def edit

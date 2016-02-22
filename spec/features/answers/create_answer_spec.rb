@@ -1,20 +1,18 @@
 require 'rails_helper'
 
-feature 'Create answer' do
+feature 'Create question' do
   let(:user) { create(:user) }
   let!(:question) { create(:question, user: user) }
 
-  scenario 'Authenticated user create answer to question', js: true do
+  scenario 'Authenticated user create answer to the question' do
     sign_in(user)
 
     visit question_path(question)
     fill_in 'answer[body]', with: 'body for the answer'
     click_on 'Post answer'
 
-    expect(current_path).to eq question_path(question)
-    within '.answers' do
-      expect(page).to have_content 'body for the answer'
-    end
+    expect(page).to have_content 'Your answer was successfully created.'
+    expect(page).to have_content 'body for the answer'
   end
 
   scenario 'Non-authenticated user try to create answer' do
