@@ -1,6 +1,10 @@
 FactoryGirl.define do
+  sequence :body do |n|
+    "body for answer #{n}"
+  end
+
   factory :answer do
-    body "MyText"
+    body
     user
     question
   end
