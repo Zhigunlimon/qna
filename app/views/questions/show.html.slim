@@ -3,7 +3,9 @@ p= @question.body
 - if current_user && current_user.author?(@question)
   = link_to 'Delete question', @question, method: :delete
 .answers
-  = render 'answers'
+  - @answers.each do |answer|
+    =render 'answers/answer', answer:answer
+
 - if current_user
   = render partial: 'answers/new'
 
