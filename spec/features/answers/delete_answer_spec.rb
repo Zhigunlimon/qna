@@ -5,12 +5,11 @@ feature 'deletes answer' do
   let(:question) { create(:question, user: user[1]) }
   let!(:answer) { create(:answer, question: question, user: user[1]) }
 
-  scenario 'succesfully deletes self created answer' do
+  scenario 'succesfully deletes self created answer', js: true do
     sign_in(user[1])
     visit question_path(question)
     click_on 'Delete Answer'
 
-    expect(page).to have_content 'Your answer was successfully deleted.'
     expect(page).to_not have_content answer.body
   end
 

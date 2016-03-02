@@ -5,7 +5,7 @@
         li = message
   .field
     = f.label :body, 'Answer'
-    br
+    .answer-errors
     = f.text_area :body
   .actions
     = f.submit "Post answer"

@@ -13,6 +13,8 @@ gem 'figaro'
 gem 'slim-rails'
 gem 'devise'
 gem 'awesome_print'
+gem 'bootstrap-sass', '~> 3.3.6'
+gem 'autoprefixer-rails'
 
 group :development, :test do
   gem 'byebug'

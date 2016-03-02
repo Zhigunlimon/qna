@@ -1,0 +1,18 @@
+h1= @question.title
+p= @question.body
+- if current_user && current_user.author?(@question)
+  .btn-group
+    = link_to 'Delete question', @question, method: :delete, class: 'btn'
+    = link_to 'Edit question', '', class: 'edit-question-link btn', data: { question: @question }
+
+  = form_for [@question], remote: true, html: { id: "edit-question" } do |f|
+    .field
+      = f.label :title, 'Edit title'
+      .answer-errors
+      = f.text_area :title
+    .field
+      = f.label :body, 'Edit question'
+      .answer-errors
+      = f.text_area :body
+    .actions
+      = f.submit "save"

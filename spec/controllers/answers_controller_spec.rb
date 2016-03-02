@@ -44,25 +44,20 @@ RSpec.describe AnswersController, type: :controller do
       let(:foreign_answer) { create(:answer, question: question, user: user) }
 
       it 'assigns the question' do
-        patch :update, id: answer, question_id: question, answer: attributes_for(:answer) 
+        patch :update, id: answer, question_id: question, answer: attributes_for(:answer), format: :js 
         expect(assigns(:question)).to eq question
       end
 
       it 'changes answer attributes' do
-        patch :update, id: answer, question_id: question, answer:  { body: 'answer new body' } 
+        patch :update, id: answer, question_id: question, answer: { body: 'answer new body' }, format: :js 
         answer.reload
         expect(answer.body).to eq 'answer new body'
       end
 
       it 'try changes answer attributes for foreign answer' do
-        patch :update, id: foreign_answer, question_id: question, answer:  { body: 'answer new body' } 
+        patch :update, id: foreign_answer, question_id: question, answer:  { body: 'answer new body' }, format: :js 
         answer.reload
         expect(answer.body).to_not eq 'answer new body'
-      end
-
-      it 'renders update view' do
-        patch :update, id: answer, question_id: question, answer: attributes_for(:answer) 
-        expect(response).to redirect_to question_path(question)
       end
     end
 
@@ -70,9 +65,43 @@ RSpec.describe AnswersController, type: :controller do
       let(:answer) { create :answer, question: question, user: user }
 
       it 'does not change answer' do
-        patch :update, id: answer, question_id: question, answer:  { body: 'answer new body' } 
+        patch :update, id: answer, question_id: question, answer:  { body: 'answer new body' }, format: :js 
         answer.reload
         expect(answer.body).to_not eq 'answer new body'
+      end
+    end
+  end
+
+  describe 'PATCH #set_best' do
+
+    context 'signed_in_user' do
+      sign_in_user
+      let!(:question) { create(:question, user: @user) }
+      let!(:answer) { create(:answer, question: question) }
+      let(:other_answer) { create(:answer) }
+
+      it 'assigns the requested answer to @answer' do
+        patch :set_best, question_id: question, id: answer, format: :js
+        expect(assigns(:answer)).to eq answer
+        expect(assigns(:question)).to eq question
+      end
+
+      it 'changes answer set_best attribute' do
+        patch :set_best, id: answer, question_id: answer.question, format: :js
+        answer.reload
+        expect(answer.set_best?).to eq true
+      end
+
+      it 'render set_best template' do
+        patch :set_best, id: answer, question_id: answer.question, format: :js
+        answer.reload
+        expect(response).to render_template :set_best
+      end
+
+      it 'should not select best answer for others question' do
+        patch :set_best, id: other_answer, question_id: other_answer.question, format: :js
+        other_answer.reload
+        expect(other_answer.set_best?).to eq false
       end
     end
   end
@@ -84,17 +113,12 @@ RSpec.describe AnswersController, type: :controller do
     sign_in_user
     it "deletes own answer" do
       answer
-      expect { delete :destroy, question_id: answer.question_id, id: answer.id }.to change(Answer, :count).by(-1)
+      expect { delete :destroy, question_id: answer.question_id, id: answer.id, format: :js }.to change(Answer, :count).by(-1)
     end
 
     it "deletes foregin answer" do
       foreign_answer
-      expect { delete :destroy, question_id: answer.question_id, id: answer.id }.to_not change(Answer, :count)
-    end
-
-    it 'render destroy view' do
-      delete :destroy, question_id: answer.question_id, id: answer.id
-      expect(response).to redirect_to question_path(answer.question_id)
+      expect { delete :destroy, question_id: answer.question_id, id: answer.id, format: :js }.to_not change(Answer, :count)
     end
   end
 end

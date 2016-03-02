@@ -2,8 +2,8 @@ class AnswersController < ApplicationController
 
   before_action :authenticate_user!
   before_action :load_question
-  before_action :load_answer, except: [:create, :new]
-  before_action :check_authority, except: [:create, :new]
+  before_action :load_answer, except: [:create, :new, :set_best]
+  before_action :check_authority, except: [:create, :new, :set_best]
 
   def new
     @answer = @question.answers.new
@@ -14,7 +14,6 @@ class AnswersController < ApplicationController
     @answer.user = current_user
     @answers = @question.answers.all
     @answer.save
-
   end
 
   def edit
@@ -22,16 +21,22 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if @answer.update(answer_params)
-      redirect_to @question, notice: "Your answer was successfully updated."
-    else
-      render :edit
+    @answer.update(answer_params)
+  end
+
+  def set_best
+    answer_id = params[:answer_id] || params[:id]
+    @answer = @question.answers.find(answer_id)
+    if current_user.author?(@question)
+      if @question.best_answer
+        @question.best_answer.update(set_best: false)
+      end
+      @answer.update(set_best: true)
     end
   end
 
   def destroy
     @answer.destroy
-    redirect_to @question, notice: 'Your answer was successfully deleted.'
   end
 
   private

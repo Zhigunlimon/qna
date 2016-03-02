@@ -1,3 +1,19 @@
-p= answer.body
-- if answer.body && current_user && current_user.author?(answer)
-  = link_to 'Delete Answer', question_answer_path(answer.question_id, answer), method: :delete
+.answer id="answer-#{answer.id}"
+  p= answer.body
+  - if answer.set_best?
+    strong Best answer
+  - elsif user_signed_in? && current_user.author?(@question)
+    = link_to 'Set best', set_best_question_answer_path(@question, answer), method: :patch, remote: true
+
+  - if answer.body && current_user && current_user.author?(answer)
+    .btn-group
+      = link_to 'Delete Answer', question_answer_path(answer.question_id, answer), method: :delete, remote: true, class: 'btn'
+      = link_to 'Edit', '', class: 'edit-answer-link btn', data: { answer_id: answer.id }
+
+    = form_for [@question, answer], remote: true, html: { id: "edit-answer-#{answer.id}" } do |f|
+      .field
+        = f.label :body, 'Edit answer'
+        .answer-errors
+        = f.text_area :body
+      .actions
+        = f.submit "save"
