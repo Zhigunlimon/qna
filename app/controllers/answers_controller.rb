@@ -25,13 +25,9 @@ class AnswersController < ApplicationController
   end
 
   def set_best
-    answer_id = params[:answer_id] || params[:id]
-    @answer = @question.answers.find(answer_id)
+    @answer = @question.answers.find(params[:id])
     if current_user.author?(@question)
-      if @question.best_answer
-        @question.best_answer.update(set_best: false)
-      end
-      @answer.update(set_best: true)
+      Answer.set_best_answer(@answer, @question)
     end
   end
 

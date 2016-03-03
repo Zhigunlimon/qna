@@ -1,8 +1,1 @@
-<% if @answer.errors.any? %> 
-  <% @answer.errors.full_messages.each do |message| %>
-    $('#flashes').html("<div class='alert alert-warning'><%= j message %></div>");
-  <% end %>
-<% else %>
-  $('#flashes').html("<div class='alert alert-success'>Best answer has been set.</div>");
-  $('.answers').html('<%= j render @question.answers %>');
-<% end %>
+$('.answers').html('<%= j render @question.answers %>');
