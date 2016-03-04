@@ -89,7 +89,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'changes answer set_best attribute' do
         patch :set_best, id: answer, question_id: answer.question, format: :js
         answer.reload
-        expect(answer.set_best?).to eq true
+        expect(answer.best?).to eq true
       end
 
       it 'render set_best template' do
@@ -101,7 +101,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'should not select best answer for others question' do
         patch :set_best, id: other_answer, question_id: other_answer.question, format: :js
         other_answer.reload
-        expect(other_answer.set_best?).to eq false
+        expect(other_answer.best?).to eq false
       end
     end
   end

@@ -1,6 +1,6 @@
 .answer id="answer-#{answer.id}"
   p= answer.body
-  - if answer.set_best?
+  - if answer.best?
     strong Best answer
   - elsif user_signed_in? && current_user.author?(@question)
     = link_to 'Set best', set_best_question_answer_path(@question, answer), method: :patch, remote: true

@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20160301093903) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "user_id"
-    t.boolean  "set_best"
+    t.boolean  "best"
   end
 
   create_table "questions", force: :cascade do |t|
