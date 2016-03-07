@@ -12,13 +12,13 @@ RSpec.describe Answer, type: :model do
     let!(:best_answer) { create(:answer, question: question, best: true) }
 
     it 'check the answer as bes' do
-      answer.set_best_answer(question)
+      answer.set_best
 
       expect(answer.best).to be true
     end
 
     it 'set_best to false for previous best answer' do
-      answer.set_best_answer(question)
+      answer.set_best
       best_answer.reload
 
       expect(best_answer.best).to be false

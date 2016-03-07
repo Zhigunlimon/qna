@@ -27,7 +27,7 @@ class AnswersController < ApplicationController
   def set_best
     @answer = @question.answers.find(params[:id])
     if current_user.author?(@question)
-      @answer.set_best_answer(@question)
+      @answer.set_best
     end
   end
 
