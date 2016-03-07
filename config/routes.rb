@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   devise_for :users
   resources :questions do
-    resources :answers
+    resources :answers do
+      member do
+        patch :set_best
+      end
+    end
   end
 
   root to: "questions#index"

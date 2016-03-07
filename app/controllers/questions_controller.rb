@@ -7,8 +7,8 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answer = @question.answers.new
     @answers = @question.answers
+    @answer = Answer.new
   end
 
   def new
@@ -30,11 +30,7 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if @question.update(question_params)
-      redirect_to @question
-    else
-      render :edit
-    end
+    @question.update(question_params)
   end
 
   def destroy
